@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import CategoryPage from './pages/CategoryPage';
 import Navbar from './components/Navbar';
 import SearchResults from './components/SearchResults';
+import WatchNow from './components/WatchNow';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
                 <HeroSection />
                 <TrendingAnime />
                 <CategoriesSection />
+                <WatchNow />
                 <FeaturedAnime />
                 <Footer />
               </>
@@ -35,9 +37,10 @@ const App = () => {
           <Route path="/categories" element={<CategoriesSection />} />
           <Route path="/featured" element={<FeaturedAnime />} />
           <Route path="/search" element={<SearchResults />} />
-
+          <Route path="/watchnow" element={<WatchNow />} />
           <Route path="/trending" element={<TrendingAnime />} />
           <Route path="/category/:category" element={<CategoryPage />} />
+
         </Routes>
       </div>
     </Router>

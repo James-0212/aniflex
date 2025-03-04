@@ -1,7 +1,11 @@
 import React from 'react';
 import heroimg from '../assets/hero.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div
       className="relative h-screen flex items-center justify-center bg-no-repeat bg-cover text-white"
@@ -17,8 +21,10 @@ const HeroSection = () => {
           Your ultimate anime streaming platform
         </p>
         <div className="flex justify-center gap-4">
-          <button className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg">
-            Start Watching
+        <button
+            onClick={() => navigate('/watchnow')}
+            className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg"
+          >            Start Watching
           </button>
           <button className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 px-6 rounded-full text-lg">
             Explore
