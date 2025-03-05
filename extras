@@ -1,0 +1,39 @@
+// Updated anime list including description and episodes
+const animeList = [
+  {
+    title: "Attack on Titan",
+    image: Aot,
+    description: "A group of humans fights against giant humanoid creatures known as Titans in a post-apocalyptic world.",
+    episodes: [
+      { title: "Episode 1", videoUrl: "https://drive.google.com/file/d/1m1lXxbV-lR1cFyVbCs1o3Si33V67FRL-/preview" },
+      { title: "Episode 2", videoUrl: "https://drive.google.com/file/d/1m7WnDbM3FiCOlVR0kp125Joqu350Kefj/preview" },
+    ],
+  },
+  {
+    title: "Bleach",
+    image: Bleach,
+    description: "A teenager gains the powers of a Soul Reaper and defends the living world from evil spirits.",
+    episodes: [
+      { title: "Episode 270", videoUrl: "https://drive.google.com/file/d/1mIfW43vHxj2gfMG8xYdNphAlL3R20sBf/preview" },
+      { title: "Episode 271", videoUrl: "https://drive.google.com/file/d/1mVx1xH0G9467Gcc7beYzCdK6ZVPEKU6r/preview" },
+    ],
+  },
+  {
+    title: "Code Geass",
+    image: Cg,
+    description: "Lelouch Lamprerough a young boy, gains a mysterious power to control people and goes on to challenge an oppressive empire.",
+    episodes: [
+      { title: "Episode 21", videoUrl: "https://drive.google.com/file/d/1mW8cAav--yes_y0DL03BcE_gyEEkYN-g/preview" },
+      { title: "Episode 25", videoUrl: "https://drive.google.com/file/d/1mcty1erRCG94b21x0FDyZ7hKyF_R0lNU/preview" },
+    ],
+  },
+  {
+    title: "One Piece",
+    image: OP,
+    description: "A pirate by the name of Monkey D Luffy embarks on a journey to become the Pirate King in a world of Pirates during the era known as The Great Pirate Era.",
+    episodes: [
+      { title: "Episode 1", videoUrl: "https://drive.google.com/file/d/1m0wMCypKy7NFxtSGbMFQbNEPsyy-mUvR/preview" },
+      { title: "Episode 2", videoUrl: "https://drive.google.com/file/d/1mEGCkGzcvV7v9Dp0PfXUkEbEXuxrAt8Z/preview" },
+    ],
+  },
+];
