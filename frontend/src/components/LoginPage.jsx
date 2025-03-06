@@ -2,16 +2,39 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // Error handling
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", email, password);
-    navigate("/admin"); // Redirect to Admin Panel after login
+    setError(""); // Clear previous errors
+    setLoading(true); // Set loading state
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        sessionStorage.setItem("token", data.token); // Store JWT securely
+        navigate("/admin"); // Redirect to Admin Panel
+      } else {
+        setError(data.error || "Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (
@@ -22,14 +45,17 @@ const LoginPage = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-3xl text-white font-bold text-center text-warmYellow mb-6">
+        <h2 className="text-3xl text-white font-bold text-center mb-6">
           Login
         </h2>
-        
+
+        {/* Error Message Display */}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Email Field */}
           <div>
-            <label className="block text-lightText text-white text-sm font-semibold mb-2">
+            <label className="block text-white text-sm font-semibold mb-2">
               Email
             </label>
             <input
@@ -43,7 +69,7 @@ const LoginPage = () => {
 
           {/* Password Field */}
           <div>
-            <label className="block text-lightText text-white text-sm font-semibold mb-2">
+            <label className="block text-white text-sm font-semibold mb-2">
               Password
             </label>
             <input
@@ -59,15 +85,18 @@ const LoginPage = () => {
           <motion.button
             type="submit"
             whileHover={{ scale: 1.05 }}
-            className="w-full bg-pink-600 px-4 py-2 text-sm rounded-lg text-white font-bold py-2 px-4 rounded-md hover:bg-warmRed transition-all"
+            disabled={loading}
+            className={`w-full bg-pink-600 text-white font-bold py-2 px-4 rounded-md transition-all ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-warmRed"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </motion.button>
         </form>
 
         {/* Signup Link */}
-        <p className="text-center text-white text-lightText mt-4">
-          Don't have an account? 
+        <p className="text-center text-white mt-4">
+          Don't have an account?
           <Link to="/signup" className="text-blue-600 hover:underline ml-1">
             Sign Up
           </Link>

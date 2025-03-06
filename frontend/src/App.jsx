@@ -12,7 +12,7 @@ import WatchNow from './components/WatchNow';
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignUpPage";
 import AdminPanel from "./components/AdminPanel"; 
-
+import AdminLogin from './components/AdminLogin';
 const App = () => {
   return (
     <Router>
@@ -46,6 +46,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           
         </Routes>
       </div>

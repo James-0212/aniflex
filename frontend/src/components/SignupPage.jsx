@@ -1,21 +1,77 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const SignupPage = () => {
+const AuthPage = () => {
+  const [activeTab, setActiveTab] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const url = isAdminLogin ? "http://localhost:5000/api/admin/login" : "http://localhost:5000/api/auth/login";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        sessionStorage.setItem(isAdminLogin ? "adminToken" : "token", data.token);
+        navigate(isAdminLogin ? "/admin" : "/");
+      } else {
+        setError(data.error || "Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
+      setLoading(false);
       return;
     }
-    console.log("Signing up with:", email, password);
-    navigate("/login"); // Redirect to Login Page after signup
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Signup failed. Try again!");
+      }
+
+      sessionStorage.setItem("signupSuccess", "true");
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,73 +82,120 @@ const SignupPage = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-6">
-          Sign Up
-        </h2>
-        
-        <form onSubmit={handleSignup} className="space-y-4">
-          {/* Email Field */}
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-warmOrange"
-              required
-            />
-          </div>
-
-          {/* Password Field */}
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-warmOrange"
-              required
-            />
-          </div>
-
-          {/* Confirm Password Field */}
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-warmOrange"
-              required
-            />
-          </div>
-
-          {/* Signup Button */}
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.05 }}
-            className="w-full bg-pink-600 text-white font-bold py-2 px-4 rounded-md hover:bg-warmRed transition-all"
+        <div className="flex justify-center mb-6">
+          <button
+            className={`px-4 py-2 font-bold ${activeTab === "login" ? "text-pink-500" : "text-white"}`}
+            onClick={() => setActiveTab("login")}
+          >
+            Login
+          </button>
+          <button
+            className={`px-4 py-2 font-bold ${activeTab === "signup" ? "text-pink-500" : "text-white"}`}
+            onClick={() => setActiveTab("signup")}
           >
             Sign Up
-          </motion.button>
-        </form>
+          </button>
+        </div>
 
-        {/* Login Link */}
-        <p className="text-center text-white mt-4">
-          Already have an account? 
-          <Link to="/login" className="text-blue-600 hover:underline ml-1">
-            Login
-          </Link>
-        </p>
+        {activeTab === "login" && (
+          <div className="flex justify-center mb-6">
+            <button
+              className={`px-4 py-2 font-bold ${isAdminLogin ? "text-pink-500" : "text-white"}`}
+              onClick={() => setIsAdminLogin(true)}
+            >
+              Admin Login
+            </button>
+            <button
+              className={`px-4 py-2 font-bold ${!isAdminLogin ? "text-pink-500" : "text-white"}`}
+              onClick={() => setIsAdminLogin(false)}
+            >
+              User Login
+            </button>
+          </div>
+        )}
+
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+        {activeTab === "login" ? (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-white text-sm font-semibold mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-white text-sm font-semibold mb-2">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
+              />
+            </div>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.05 }}
+              disabled={loading}
+              className={`w-full bg-pink-600 text-white font-bold py-2 px-4 rounded-md transition-all ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-700"
+              }`}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </motion.button>
+          </form>
+        ) : (
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div>
+              <label className="block text-white text-sm font-semibold mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-white text-sm font-semibold mb-2">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-white text-sm font-semibold mb-2">Confirm Password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
+              />
+            </div>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.05 }}
+              disabled={loading}
+              className={`w-full bg-pink-600 text-white font-bold py-2 px-4 rounded-md transition-all ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-700"
+              }`}
+            >
+              {loading ? "Signing up..." : "Sign Up"}
+            </motion.button>
+          </form>
+        )}
       </motion.div>
     </div>
   );
 };
 
-export default SignupPage;
+export default AuthPage;

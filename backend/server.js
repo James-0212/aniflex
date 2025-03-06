@@ -5,6 +5,10 @@ const dotenv = require("dotenv");
 const multer = require("multer");
 const path = require("path");
 const animeRoutes = require("./routes/animeRoutes");
+const authRoutes = require("./routes/authRoutes");
+const adminRoutes =require("./routes/adminRoutes")
+
+
 
 dotenv.config();
 const app = express();
@@ -32,7 +36,16 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.log(err));
 
+
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+
 app.use("/api/anime", animeRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;
