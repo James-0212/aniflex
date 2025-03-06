@@ -44,17 +44,11 @@ const HeroSection = () => {
 
             onClick={() => navigate('/watchnow')}
 
-            className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg"
+            className="bg-pink-500 hover:bg-pink-600 w-90 text-white font-bold py-3 px-6 rounded-full text-lg"
 
           >
 
             Start Watching
-
-          </button>
-
-          <button className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 px-6 rounded-full text-lg">
-
-            Explore
 
           </button>
 
