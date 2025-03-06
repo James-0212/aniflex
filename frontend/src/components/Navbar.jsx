@@ -61,7 +61,7 @@ const Navbar = () => {
               Logout
             </button>
           ) : (
-            <Link to="/auth" className="bg-pink-600 px-4 py-2 text-sm rounded-lg hover:bg-pink-500 transition duration-300">
+            <Link to="/signup" className="bg-pink-600 px-4 py-2 text-sm rounded-lg hover:bg-pink-500 transition duration-300">
               Login / Sign Up
             </Link>
           )}
@@ -94,7 +94,7 @@ const Navbar = () => {
                 Logout
               </button>
             ) : (
-              <Link to="/auth" className="bg-pink-600 px-4 py-2 text-sm rounded-lg hover:bg-pink-500 transition duration-300 w-full" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/signup" className="bg-pink-600 px-4 py-2 text-sm rounded-lg hover:bg-pink-500 transition duration-300 w-full" onClick={() => setIsMenuOpen(false)}>
                 Login / Sign Up
               </Link>
             )}
