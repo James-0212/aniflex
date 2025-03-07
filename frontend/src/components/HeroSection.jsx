@@ -40,13 +40,7 @@ const HeroSection = () => {
 
         <div className="flex gap-4">
 
-          <button
-
-            onClick={() => navigate('/watchnow')}
-
-            className="bg-pink-500 hover:bg-pink-600 w-90 text-white font-bold py-3 px-6 rounded-full text-lg"
-
-          >
+          <button onClick={() => navigate('/watchnow')} className="bg-pink-500 hover:bg-pink-600 w-90 text-white font-bold py-3 px-6 rounded-full text-lg">
 
             Start Watching
 
